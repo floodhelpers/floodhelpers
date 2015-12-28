@@ -1,0 +1,21 @@
+app:
+  build: .
+  volumes_from:
+    - storage
+  ports:
+    - :9000
+
+nginx:
+  image: nginx
+  volumes:
+    - ./nginx.conf:/etc/nginx/nginx.conf:ro
+  ports:
+    - 8080:80
+  links:
+    - app
+
+storage:
+  image: busybox
+  command: /bin/true
+  volumes:
+    - "${STORAGE_BASE}/craft/storage:/app/craft/storage"
