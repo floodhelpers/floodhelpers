@@ -2,8 +2,8 @@ app:
   build: .
   volumes_from:
     - storage
-  ports:
-    - :9000
+  environment:
+    CLEARDB_DATABASE_URL: mysql://b31aa78a5e1afa:c56f3afa@us-cdbr-iron-east-03.cleardb.net/heroku_f043d088b5d163c?reconnect=true
 
 nginx:
   image: nginx
