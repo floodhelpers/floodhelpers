@@ -30,7 +30,7 @@
     </div>
 
     <ul class="volunteer_tasks">
-    	{% for entry in craft.entries.section('tasks').limit(5).find() %}
+    	{% for entry in craft.entries.section('tasks').find() %}
         <li class="volunteer_task cf">
             <div class="task_details">
                 <h2 class="taskname">{{ entry.title }}</h2>
@@ -42,7 +42,7 @@
 
 				<div class="info_extra">
 	                <h3>Where:</h3>
-	                <p>{{ entry.location }}</p>
+	                <p><a href="http://google.com/maps?q={{ entry.location }}" target="_blank">{{ entry.location }}</a></p>
 	            </div>
 
 	            <div class="info_extra">
@@ -57,7 +57,7 @@
             		People needed
             	</div>
             	<div class="button_cta">
-            		<button class="js_task_action_cta">Yes, I'll do this</button>
+            		<button class="js_task_action_cta">Assigned</button>
             	</div>
             </div>
         </li>

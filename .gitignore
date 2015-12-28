@@ -1,3 +1,14 @@
 # Craft Storage (cache) [http://buildwithcraft.com/help/craft-storage-gitignore]
 /craft/storage/*
 !/craft/storage/logo/*
+
+#usual stuff
+.DS_Store
+*-ck.js
+*.komodoproject
+*.project
+*.sass-cache/
+*.sublime-project
+*.sublime-workspace
+
+*.codekit
