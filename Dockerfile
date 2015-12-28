@@ -1,9 +1,18 @@
 FROM php:5.6-apache
 
+RUN apt-get update
+
 # PHP Extensions
-RUN docker-php-ext-install mbstring pdo_mysql
-RUN apt-get update && apt-get install -y libmagickwand-6.q16-dev --no-install-recommends \
-    && ln -s /usr/lib/x86_64-linux-gnu/ImageMagick-6.8.9/bin-Q16/MagickWand-config /usr/bin \
+RUN apt-get install -y --no-install-recommends \
+    libmagickwand-6.q16-dev \
+    libmcrypt-dev
+
+RUN docker-php-ext-install \
+    pdo_mysql \
+    mcrypt \
+    mbstring
+
+RUN ln -s /usr/lib/x86_64-linux-gnu/ImageMagick-6.8.9/bin-Q16/MagickWand-config /usr/bin \
     && pecl install imagick \
     && echo "extension=imagick.so" > /usr/local/etc/php/conf.d/ext-imagick.ini
 
@@ -14,6 +23,7 @@ RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local
 # Apache
 COPY ./apache2.conf /etc/apache2/apache2.conf
 RUN a2enmod rewrite
+RUN cd /etc/apache2/mods-enabled && ln -s rewrite.load -> ../mods-available/rewrite.load
 
 # App
 WORKDIR /var/www

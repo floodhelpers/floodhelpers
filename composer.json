@@ -1,7 +1,16 @@
 {
     "require": {
         "php": "^5.6.0",
+        "ext-reflection": "*",
+        "ext-pcre": "*",
+        "ext-spl": "*",
+        "ext-pdo": "*",
+        "ext-pdo_mysql": "*",
+        "ext-mcrypt": "*",
+        "ext-imagick": "*",
+        "ext-openssl": "*",
         "ext-mbstring": "*",
-        "ext-imagick": "*"
+        "ext-json": "*",
+        "ext-curl": "*"
     }
 }
