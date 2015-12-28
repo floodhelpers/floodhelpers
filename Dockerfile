@@ -13,6 +13,7 @@ RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local
 
 # Apache
 COPY ./apache2.conf /etc/apache2/apache2.conf
+RUN a2enmod rewrite
 
 # App
 WORKDIR /var/www
