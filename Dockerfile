@@ -1,4 +1,4 @@
-FROM php:5.6-fpm
+FROM php:5.6-apache
 
 # PHP Extensions
 RUN docker-php-ext-install mbstring pdo_mysql
@@ -11,11 +11,13 @@ RUN apt-get update && apt-get install -y libmagickwand-6.q16-dev --no-install-re
 ENV COMPOSER_VERSION 1.0.0-alpha11
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer --version=${COMPOSER_VERSION}
 
-# App
-RUN mkdir /app
-WORKDIR /app
+# Apache
+COPY ./apache2.conf /etc/apache2/apache2.conf
 
-COPY composer.json /app/
+# App
+WORKDIR /var/www
+
+COPY composer.json /var/www/
 RUN composer install
 
-COPY . /app/
+COPY . /var/www/
