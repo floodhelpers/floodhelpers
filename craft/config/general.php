@@ -8,5 +8,22 @@
  */
 
 return array(
-    'devMode' => true
+
+  '*' => array(
+    'omitScriptNameInUrls' => true,
+  ),
+
+  'dev' => array(
+    'devMode' => true,
+    'environmentVariables' => array(
+      'baseUrl' => 'http://floodhelpers.dev/'
+    )
+  ),
+
+  'live' => array(
+    'environmentVariables' => array(
+      'baseUrl' => 'http://floodhelpers.org/'
+    )
+  )
+
 );
