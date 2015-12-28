@@ -1,0 +1,108 @@
+body {
+  font-family: sans-serif;
+  background: #fff;
+  margin: 0; }
+
+#container {
+  margin: 0 auto;
+  max-width: 700px; }
+
+#header, #footer {
+  display: block;
+  color: #fff;
+  background: #2279B7; }
+  #header a, #footer a {
+    color: #FFF; }
+
+#header {
+  padding: 25px; }
+
+.brand {
+  font-weight: bold; }
+
+.cf:before,
+.cf:after {
+  content: " ";
+  display: table; }
+
+.cf:after {
+  clear: both; }
+
+#header a {
+  text-decoration: none; }
+
+#header h1 {
+  float: left;
+  margin: 0;
+  font-weight: normal;
+  font-size: 30px;
+  line-height: 1; }
+
+#header nav {
+  display: block;
+  float: right; }
+
+#header nav ul {
+  margin: 0;
+  list-style-type: none; }
+
+#header nav ul li {
+  float: left;
+  margin-left: 20px; }
+
+#header nav ul li a {
+  display: block;
+  margin-top: 4px;
+  line-height: 22px; }
+
+#header nav ul li a:hover,
+#header nav ul li a.active {
+  border-bottom: 2px solid #fff; }
+
+#header nav ul li a.active {
+  cursor: default; }
+
+#content {
+  display: block;
+  padding: 25px;
+  background: #fff; }
+
+#content h1 {
+  margin-top: 0;
+  font-size: 35px;
+  font-weight: bold; }
+
+#content a {
+  color: #da5a47;
+  text-decoration: none; }
+
+#content a:hover {
+  text-decoration: underline; }
+
+#footer {
+  border-radius: 0 0 7px 7px;
+  padding: 15px;
+  font-size: 12px;
+  text-align: center; }
+
+.volunteer_tasks {
+  list-style: none;
+  padding: 0; }
+
+.volunteer_task {
+  margin-bottom: 1em;
+  padding: 20px;
+  background-color: #EEE; }
+  .volunteer_task h2 {
+    margin: 0;
+    margin-bottom: 0.2em; }
+  .volunteer_task h3, .volunteer_task p {
+    display: inline; }
+  .volunteer_task .info_extra {
+    font-size: 14px; }
+  .volunteer_task .task_details {
+    width: 80%;
+    float: left; }
+  .volunteer_task .task_cta {
+    width: 20%;
+    float: left; }

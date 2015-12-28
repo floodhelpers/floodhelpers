@@ -20,14 +20,50 @@
 {% extends "_layout" %}
 
 {% block content %}
-	<h1>{{ entry.title }}</h1>
 
-	{{ entry.body }}
+<section class="section_tasks">
 
-	<h2>Recent News</h2>
-	<ul>
-		{% for entry in craft.entries.section('news').limit(5).find() %}
-			<li><a href="{{ entry.url }}">{{ entry.title }}</a></li>
-		{% endfor %}
-	</ul>
+    <div class="area_selector">
+        We need volunteers in
+		<strong>Hebden Bridge</strong>
+        to help with:
+    </div>
+
+    <ul class="volunteer_tasks">
+    	{% for entry in craft.entries.section('tasks').limit(5).find() %}
+        <li class="volunteer_task cf">
+            <div class="task_details">
+                <h2 class="taskname">{{ entry.title }}</h2>
+
+                <div class="info_extra">
+	                <h3>Skills needed:</h3>
+	                <p>{{ entry.skillsNeeded }}</p>
+	            </div>
+
+				<div class="info_extra">
+	                <h3>Where:</h3>
+	                <p>{{ entry.location }}</p>
+	            </div>
+
+	            <div class="info_extra">
+	            	<h3>You will need:</h3>
+	                <p>{{ entry.youWillNeed }}</p>
+	            </div>
+            </div>
+
+            <div class="task_cta">
+            	<div class="number_needed">
+            		{{ entry.numberOfHelpersNeeded }}
+            		People needed
+            	</div>
+            	<div class="button_cta">
+            		<button class="js_task_action_cta">Yes, I'll do this</button>
+            	</div>
+            </div>
+        </li>
+        {% endfor %}
+    </ul>
+</section>
+
+
 {% endblock %}
