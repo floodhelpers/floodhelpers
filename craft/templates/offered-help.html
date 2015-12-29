@@ -1,9 +1,9 @@
 {% extends "_layout" %}
 {% import '_snippets/_macros' as siteMacros %}
-{% set selAction = craft.request.getParam('taskAction') %}
+{% set selSkill = craft.request.getParam('skillOffered') %}
 {% set selStatus = craft.request.getParam('taskStatus') %}
-{% if selAction == "" %}
-    {% set selAction = "All" %}    
+{% if selSkill == "" %}
+    {% set selSkill = "All" %}    
 {% endif %}
 
 {% if selStatus == "" %}
@@ -15,41 +15,41 @@
 <section class="section_tasks">
 
     <div class="area_selector">
-        Currently showing <strong>{{ selStatus }}</strong> tickets that have <strong>{{ selAction }}</strong> recommended action status.
+        Currently showing <strong>{{ selStatus }}</strong> offers of help that are/have <strong>{{ selSkill }}</strong>.
     </div>
 
     <div class="area_selector">
     <p>
-        <a href="?taskStatus=All&taskAction={{ selAction }}" {% if selStatus == "All" or selStatus == "" %}class="active"{% endif %}>All</a> / 
+        <a href="?taskStatus=All&skillOffered={{ selSkill }}" {% if selStatus == "All" or selStatus == "" %}class="active"{% endif %}>All</a> / 
         {% set taskStatus = craft.fields.getFieldByHandle("taskStatus") %}
         {% for option in taskStatus.settings.options %}
-            <a href="?taskStatus={{ option.label }}&taskAction={{ selAction }}" {% if option.label == selStatus %}class="active"{% endif %}>{{ option.label }}</a>
+            <a href="?taskStatus={{ option.label }}&skillOffered={{ selSkill }}" {% if option.label == selStatus %}class="active"{% endif %}>{{ option.label }}</a>
             {% if not loop.last %} / {% endif %}
         {% endfor %}
     </p>
     <p>
-        <a href="?taskStatus={{ selStatus }}&taskAction=All" {% if selAction == "All" or selAction == "" %}class="active"{% endif %}>All</a> / 
-        {% set recommendedAction = craft.fields.getFieldByHandle("recommendedAction") %}
-        {% for option in recommendedAction.settings.options %}
-            {% if option.label != "Choose an Action:" %}
-                <a href="?taskStatus={{ selStatus }}&taskAction={{ option.label }}" {% if option.label == selAction %}class="active"{% endif %}>{{ option.label }}</a>
-                {% if not loop.last %} / {% endif %}
-            {% endif %}
+        <a href="?taskStatus={{ selStatus }}&skillOffered=All" {% if selSkill == "All" or selSkill == "" %}class="active"{% endif %}>All</a> / 
+        {% set skillsOffered = craft.tags.group("skills") %}
+        {% set equipmentOffered = craft.tags.group("equipment") %}
+        {% set tags = equipmentOffered | merge(skillsOffered) %}
+        {% for option in tags %}
+            <a href="?taskStatus={{ selStatus }}&skillOffered={{ option.title }}" {% if option.title == selSkill %}class="active"{% endif %}>{{ option.title }}</a>
+            {% if not loop.last %} / {% endif %}
         {% endfor %}
     </p>
     </div>
 
-    {% set selActionValue = siteMacros.getFieldValue("recommendedAction", selAction) %}
     {% set selActionStatus = siteMacros.getFieldValue("taskStatus", selStatus) %}
+    {% set skillTagModel = craft.tags.search(selSkill).first() %}
 
-    {% if selActionValue == "All" and selActionStatus == "All" %}
-        {% set data = craft.entries.section('tasks').order("urgent desc").find() %}
-    {% elseif selActionValue == "All" and selActionStatus != "All" %}
-        {% set data = craft.entries.section('tasks').taskStatus(selActionStatus).order("urgent desc").find() %}
-    {% elseif selActionValue != "All" and selActionStatus == "All" %}
-        {% set data = craft.entries.section('tasks').recommendedAction(selActionValue).order("urgent desc").find() %}
+    {% if selSkill == "All" and selActionStatus == "All" %}
+        {% set data = craft.entries.section('offers').order("urgent desc").find() %}
+    {% elseif selSkill == "All" and selActionStatus != "All" %}
+        {% set data = craft.entries.section('offers').taskStatus(selActionStatus).order("urgent desc").find() %}
+    {% elseif selSkill != "All" and selActionStatus == "All" %}
+        {% set data = craft.entries.section('offers').relatedTo(selSkill).order("urgent desc").find() %}
     {% else %}
-        {% set data = craft.entries.section('tasks').taskStatus(selActionStatus).recommendedAction(selActionValue).order("urgent desc").find() %}
+        {% set data = craft.entries.section('offers').taskStatus(selActionStatus).relatedTo(skillTagModel).order("urgent desc").find() %}
     {% endif %}
 
     <ul class="volunteer_tasks">
@@ -57,7 +57,7 @@
         <li class="volunteer_task cf">
             <div class="task_details">
 
-                <h2 class="taskname"><a href="/admin/entries/tasks/{{ entry.id }}-{{ entry.slug }}">#{{ entry.id }} - {{ entry.firstName }} {{ entry.lastName }} {% if entry.urgent %}<strong>(URGENT)</strong>{% endif %}</a></h2>
+                <h2 class="taskname"><a href="/admin/entries/offers/{{ entry.id }}-{{ entry.slug }}">#{{ entry.id }} - {{ entry.firstName }} {{ entry.lastName }} {% if entry.urgent %}<strong>(URGENT)</strong>{% endif %}</a></h2>
                 
                 <div class="info_extra">
                     <h3>Contact:</h3>
@@ -82,10 +82,10 @@
                 {% endif %}
 
                 <div class="info_extra">
-	                <h3>Skills needed:</h3>
+	                <h3>Skills offered:</h3>
 	                <p>
-                        {% if entry.skillsNeeded | length > 0 %}
-                            {% for skill in entry.skillsNeeded %}
+                        {% if entry.skillsOffered | length > 0 %}
+                            {% for skill in entry.skillsOffered %}
                                 {{ skill }},
                             {% endfor %}
                         {% else %}
@@ -93,10 +93,10 @@
                         {% endif %}
                     </p>
 
-                    <h3>Equipment needed:</h3>
+                    <h3>Equipment offered:</h3>
                     <p>
-                        {% if entry.equipmentNeeded | length > 0 %}
-                            {% for equipment in entry.equipmentNeeded %}
+                        {% if entry.equipmentOffered | length > 0 %}
+                            {% for equipment in entry.equipmentOffered %}
                                 {{ equipment }},
                             {% endfor %}
                         {% else %}
@@ -111,7 +111,26 @@
 
 	            </div>
 
-				
+                {% if entry.accommodationOffered %}
+                <div class="accomodation">
+
+                    <h3>Accommodation offered</h3>
+
+                    <div class="info_extra">
+                        
+                        <h3>Duration:</h3>
+                        <p>{{ siteMacros.getFieldLabel("duration", entry.duration) }}</p>
+
+                        <h3>How many people:</h3>
+                        <p>{{ entry.howManyPeople }}</p>
+
+                        <h3>Any other info:</h3>
+                        <p>{{ entry.anyOtherRequirements }}</p>
+
+                    </div>
+
+                </div>
+                {% endif %}
 
             </div>
 
@@ -129,17 +148,10 @@
                     <h3>Status:</h3>
                     <p>{{ siteMacros.getFieldLabel("taskStatus", entry.taskStatus) }}</p>
 
-                    <h3>Recommended action:</h3>
-                    <p>{{ siteMacros.getFieldLabel("recommendedAction", entry.recommendedAction) }}</p>
-
-                    {% if entry.numberOfPeopleRequired | length > 0 and entry.numberOfPeopleRequired > 0 %}
-                        <h3>Number of people required</h3>
-                        <p>{{ entry.numberOfPeopleRequired }}</p>
-                    {% endif %}
-
                 </div>
 
             </div>
+
         </li>
         {% endfor %}
     </ul>

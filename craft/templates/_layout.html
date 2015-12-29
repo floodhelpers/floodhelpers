@@ -17,7 +17,7 @@
 <body>
 
 		<header id="header" class="cf">
-			<h1><a href="{{ siteUrl }}" class="brand">{{ siteName }}</a></h1>
+			<h1><a href="{{ siteUrl }}" class="brand">{{ siteName }}</a> - {% if craft.request.firstSegment == '' %}Tickets{% else %}Offered help{% endif %}</h1>
 
 			<nav>
 				<ul>

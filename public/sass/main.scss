@@ -90,6 +90,9 @@ list-style-type: none;
 	color: #da5a47;
 	text-decoration: none;
 }
+#content a.active {
+	border-bottom: 2px solid #da5a47 !important;
+}
 #content a:hover {
 	text-decoration: underline;
 }
