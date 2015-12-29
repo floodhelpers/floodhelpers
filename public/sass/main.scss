@@ -114,18 +114,21 @@ list-style-type: none;
 		margin: 0;
 		margin-bottom: 0.2em;
 	}
-	h3, p{
-		display: inline;
+	h3 {
+		margin-bottom: 0.1em;
+	}
+	p {
+		margin: 0;
 	}
 	.info_extra{
 		font-size: 14px;
 	}
 	.task_details{
-		width: 80%;
+		width: 70%;
 		float: left;
 	}
 	.task_cta{
-		width: 20%;
+		width: 30%;
 		float: left;
 	}
 }

@@ -95,13 +95,15 @@ body {
   .volunteer_task h2 {
     margin: 0;
     margin-bottom: 0.2em; }
-  .volunteer_task h3, .volunteer_task p {
-    display: inline; }
+  .volunteer_task h3 {
+    margin-bottom: 0.1em; }
+  .volunteer_task p {
+    margin: 0; }
   .volunteer_task .info_extra {
     font-size: 14px; }
   .volunteer_task .task_details {
-    width: 80%;
+    width: 70%;
     float: left; }
   .volunteer_task .task_cta {
-    width: 20%;
+    width: 30%;
     float: left; }

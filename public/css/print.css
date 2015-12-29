@@ -1,0 +1,36 @@
+/* Set a full page margin */
+@page {
+  margin: 0.5cm; }
+* {
+  margin: 0;
+  padding: 0; }
+
+/* Reset base font and typeface */
+body {
+  font: 12pt Georgia, "Times New Roman", Times, serif;
+  line-height: 1.3; }
+
+.task_cta {
+  width: 30%;
+  float: left; }
+
+.task_details {
+  width: 70%;
+  float: left; }
+
+.volunteer_task {
+  border-top: 2px solid #000000;
+  clear: both;
+  padding: 20px 0; }
+
+ul {
+  list-style: none; }
+
+h1, h2, h3, h4, h5, h6 {
+  font-size: 16px;
+  font-weight: bold;
+  margin-bottom: 5px;
+  margin-top: 10px; }
+
+p {
+  margin: 0; }

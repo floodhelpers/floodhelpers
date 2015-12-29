@@ -1,4 +1,4 @@
-{% redirect "admin" %}
+{% requireLogin %}
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en-US">
 <head>
@@ -9,7 +9,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
 	<title>{% if title is defined %}{{ title }} - {% endif %}{{ siteName }}</title>
 	<link rel="home" href="{{ siteUrl }}" />
-	<link rel="stylesheet" href="/css/main.css">
+	<link rel="stylesheet" href="/css/main.css" media="screen, projection">
+	<link rel="stylesheet" href="/css/print.css" media="print">
 	<link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
 </head>
 
@@ -20,7 +21,8 @@
 
 			<nav>
 				<ul>
-					<li><a href="{{ url('news') }}" {% if craft.request.firstSegment == 'news' %}class="active"{% endif %}>News</a></li>
+					<li><a href="{{ url('/') }}" {% if craft.request.firstSegment == '' %}class="active"{% endif %}>Tickets</a></li>
+					<li><a href="{{ url('offered-help') }}" {% if craft.request.firstSegment == 'offered-help' %}class="active"{% endif %}>Offered help</a></li>
 				</ul>
 			</nav>
 		</header>
@@ -32,8 +34,6 @@
 				<p>See Twig’s <a href="http://twig.sensiolabs.org/doc/templates.html#template-inheritance">Template Inheritance</a> documentation for an explanation.</p>
 			{% endblock %}
 		</main>
-
-
 
 </body>
 </html>

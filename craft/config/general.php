@@ -11,6 +11,7 @@ return array(
 
   '*' => array(
     'omitScriptNameInUrls' => true,
+    'loginPath' => 'admin/login'
   ),
 
   'dev' => array(

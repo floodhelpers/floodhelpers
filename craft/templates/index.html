@@ -1,64 +1,109 @@
-{#
- # Homepage template
- # ---------------
- #
- # When this template gets loaded, it will be because someone has accessed
- # http://yoursite.com/ (without any URI). Craft checks to see if you have
- # a Single section set to be the Homepage (as you do, by default), and
- # loads the section’s Template (this file). A special ‘entry’ variable
- # will already be set for you, assigned to the Homepage entry.
- #
- # It's worth noting that even if you didn't have a Homepage Single section,
- # as long as this template remains at craft/templates/index.html, it
- # would still be the one to get loaded when accessing http://yoursite.com/,
- # albeit without an ‘entry’ variable already set for you.
- #
- # See this page for more details on how Craft routes requests:
- # http://craftcms.com/docs/routing
- #}
-
 {% extends "_layout" %}
+{% import '_snippets/_macros' as siteMacros %}
 
 {% block content %}
 
 <section class="section_tasks">
 
     <div class="area_selector">
-        We need volunteers in
-		<strong>Hebden Bridge</strong>
-        to help with:
+        Currently <strong>unassigned</strong> tickets that need to be matched.
+    </div>
+
+    <div class="area_selector">
+    <p>
+        {% set recommendedAction = craft.fields.getFieldByHandle("recommendedAction") %}
+        {% for option in recommendedAction.settings.options %}
+            {% if option.label != "Choose an Action:" %}
+                <a href="?action={{ option.label | raw }}">{{ option.label }}</a> | 
+            {% endif %}
+        {% endfor %}
+    </p>
     </div>
 
     <ul class="volunteer_tasks">
-    	{% for entry in craft.entries.section('tasks').find() %}
+    	{% for entry in craft.entries.section('tasks').taskStatus("unassigned").recommendedAction("assignGeneralHelp").order("urgent desc").find() %}
         <li class="volunteer_task cf">
             <div class="task_details">
-                <h2 class="taskname">{{ entry.title }}</h2>
+
+                <h2 class="taskname">#{{ entry.id }} - {{ entry.firstName }} {{ entry.lastName }} {% if entry.urgent %}<strong>(URGENT)</strong>{% endif %}</h2>
+                
+                <div class="info_extra">
+                    <h3>Contact:</h3>
+                    <p>
+                        {% if entry.contactNumber | length > 0 %}
+                            {{ entry.contactNumber }}
+                        {% endif %}
+                        {% if entry.contactNumber | length > 0 and entry.emailAddress | length > 0 %}
+                         / 
+                        {% endif %}
+                        {% if entry.emailAddress | length > 0 %}
+                            {{ entry.emailAddress }}
+                        {% endif %}
+                    </p>
+                </div>
+
+                {% if entry.otherContactInfo | length > 0 %}
+                    <h3>Other contact info: {{ entry.otherContactInfo }}</h3>
+                {% endif %}
 
                 <div class="info_extra">
 	                <h3>Skills needed:</h3>
-	                <p>{{ entry.skillsNeeded }}</p>
+	                <p>
+                        {% if entry.skillsNeeded | length > 0 %}
+                            {% for skill in entry.skillsNeeded %}
+                                {{ skill }},
+                            {% endfor %}
+                        {% else %}
+                        n/a
+                        {% endif %}
+                    </p>
+
+                    <h3>Equipment needed:</h3>
+                    <p>
+                        {% if entry.equipmentNeeded | length > 0 %}
+                            {% for equipment in entry.equipmentNeeded %}
+                                {{ equipment }},
+                            {% endfor %}
+                        {% else %}
+                        n/a
+                        {% endif %}
+                    </p>
+
+                    {% if entry.extraInfo | length > 0 %}
+                        <h3>Extra information</h3>
+                        <p>{{ entry.extraInfo }}</p>
+                    {% endif %}
+
 	            </div>
 
-				<div class="info_extra">
-	                <h3>Where:</h3>
-	                <p><a href="http://google.com/maps?q={{ entry.location }}" target="_blank">{{ entry.location }}</a></p>
-	            </div>
+				
 
-	            <div class="info_extra">
-	            	<h3>You will need:</h3>
-	                <p>{{ entry.youWillNeed }}</p>
-	            </div>
             </div>
 
             <div class="task_cta">
-            	<div class="number_needed">
-            		{{ entry.numberOfHelpersNeeded }}
-            		People needed
-            	</div>
-            	<div class="button_cta">
-            		<button class="js_task_action_cta">Assigned</button>
-            	</div>
+
+                <div class="info_extra">
+                    <h3>Where:</h3>
+                    <p>
+                        {% if entry.addressLine1 | length > 0 %}{{ entry.addressLine1 }}<br />{% endif %}
+                        {% if entry.addressLine2 | length > 0 %}{{ entry.addressLine2 }}<br />{% endif %}
+                        {% if entry.area | length > 0 %}{{ siteMacros.getFieldValue("area", entry.area) }}<br />{% endif %}
+                        {% if entry.postCode | length > 0 %}{{ entry.postCode }}{% endif %}
+                    </p>
+
+                    <h3>Status:</h3>
+                    <p>{{ siteMacros.getFieldValue("taskStatus", entry.taskStatus) }}</p>
+
+                    <h3>Recommended action:</h3>
+                    <p>{{ siteMacros.getFieldValue("recommendedAction", entry.recommendedAction) }}</p>
+
+                    {% if entry.numberOfPeopleRequired | length > 0 and entry.numberOfPeopleRequired > 0 %}
+                        <h3>Number of people required</h3>
+                        <p>{{ entry.numberOfPeopleRequired }}</p>
+                    {% endif %}
+
+                </div>
+
             </div>
         </li>
         {% endfor %}

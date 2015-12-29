@@ -1,0 +1,11 @@
+{% macro getFieldValue(field, value) %}
+  
+  {% set data = [] %}
+  {% set field = craft.fields.getFieldByHandle(field) %}
+  {% for item in field.settings.options %}
+    {% if item.value == value %}
+        {{ item.label }}
+    {% endif %}
+  {% endfor %}
+
+{% endmacro %}
