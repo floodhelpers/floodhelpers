@@ -110,3 +110,30 @@ body {
   .volunteer_task .task_cta {
     width: 30%;
     float: left; }
+
+.contactnumber {
+  font-size: 24px;
+  font-weight: bold;
+  display: inline-block;
+  padding: 4px 6px;
+  background-color: #da5a47;
+  letter-spacing: 2px;
+  color: white; }
+
+.highlight {
+  padding: 2px 4px;
+  background-color: #FFF; }
+
+.taskstatus {
+  padding: 2px 4px;
+  display: inline-block; }
+  .taskstatus.unassigned {
+    background-color: #e92e3d;
+    color: white; }
+  .taskstatus.inProgress {
+    background-color: #2ce941; }
+  .taskstatus.forReview {
+    background-color: #46E6E6; }
+  .taskstatus.closed {
+    background-color: #000;
+    color: white; }

@@ -135,3 +135,41 @@ list-style-type: none;
 		float: left;
 	}
 }
+
+.contactnumber{
+	font-size: 24px;
+	font-weight: bold;
+	display: inline-block;
+	padding: 4px 6px;
+	background-color: #da5a47;
+	letter-spacing: 2px;
+	color: white;
+}
+
+.highlight{
+	padding: 2px 4px;
+	background-color: #FFF;
+}
+
+.taskstatus{
+	padding: 2px 4px;
+	display: inline-block;
+
+	&.unassigned{
+		background-color: #e92e3d;
+		color: white;
+	}
+
+	&.inProgress{
+		background-color: #2ce941;
+	}
+
+	&.forReview{
+		background-color: #46E6E6;
+	}
+
+	&.closed{
+		background-color: #000;
+		color: white;
+	}
+}

@@ -7,7 +7,7 @@
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-	<title>{% if title is defined %}{{ title }} - {% endif %}{{ siteName }}</title>
+	<title>{% if sectionTitle is defined %}{{ sectionTitle }} - {% endif %}{% if title is defined %}{{ title }} - {% endif %}{{ siteName }}</title>
 	<link rel="home" href="{{ siteUrl }}" />
 	<link rel="stylesheet" href="/css/main.css" media="screen, projection">
 	<link rel="stylesheet" href="/css/print.css" media="print">
@@ -17,12 +17,18 @@
 <body>
 
 		<header id="header" class="cf">
-			<h1><a href="{{ siteUrl }}" class="brand">{{ siteName }}</a> - {% if craft.request.firstSegment == '' %}Tickets{% else %}Offered help{% endif %}</h1>
+			<h1><a href="{{ siteUrl }}" class="brand">{{ siteName }}</a> -
+			{% if craft.request.firstSegment == '' %}Tickets{% endif %}
+			{% if craft.request.firstSegment == 'offered-help' %}Offered help{% endif %}
+			{% if craft.request.firstSegment == 'needed' %}Equipment/Skills Needed{% endif %}
+			{% if craft.request.firstSegment == 'triage' %}Triage{% endif %}
+			</h1>
 
 			<nav>
 				<ul>
 					<li><a href="{{ url('/') }}" {% if craft.request.firstSegment == '' %}class="active"{% endif %}>Tickets</a></li>
 					<li><a href="{{ url('offered-help') }}" {% if craft.request.firstSegment == 'offered-help' %}class="active"{% endif %}>Offered help</a></li>
+					<li><a href="{{ url('needed') }}" {% if craft.request.firstSegment == 'needed' %}class="active"{% endif %}>Needed</a></li>
 				</ul>
 			</nav>
 		</header>

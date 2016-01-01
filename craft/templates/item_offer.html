@@ -1,65 +1,3 @@
-{% set sectionTitle = "Offers of help" %}
-
-{% extends "_layout" %}
-{% import '_snippets/_macros' as siteMacros %}
-{% set selSkill = craft.request.getParam('skillOffered') %}
-{% set selStatus = craft.request.getParam('taskStatus') %}
-{% if selSkill == "" %}
-    {% set selSkill = "All" %}
-{% endif %}
-
-{% if selStatus == "" %}
-    {% set selStatus = "All" %}
-{% endif %}
-
-{% block content %}
-
-{% set selActionStatus = siteMacros.getFieldValue("taskStatus", selStatus) %}
-{% set skillTagModel = craft.tags.search(selSkill).first() %}
-{% set allentries = craft.entries.section('offers').limit(null) %}
-
-
-{% if selSkill == "All" and selActionStatus == "All" %}
-    {% set data = craft.entries.section('offers').order("urgent desc").find() %}
-{% elseif selSkill == "All" and selActionStatus != "All" %}
-    {% set data = craft.entries.section('offers').taskStatus(selActionStatus).order("urgent desc").find() %}
-{% elseif selSkill != "All" and selActionStatus == "All" %}
-    {% set data = craft.entries.section('offers').relatedTo(selSkill).order("urgent desc").find() %}
-{% else %}
-    {% set data = craft.entries.section('offers').taskStatus(selActionStatus).relatedTo(skillTagModel).order("urgent desc").find() %}
-{% endif %}
-
-
-
-<section class="section_tasks">
-
-    <div class="area_selector">
-        Currently showing <strong>{{ selStatus }}</strong> offers of help that are/have <strong>{{ selSkill }}</strong>.
-    </div>
-
-    <div class="area_selector">
-
-    <p>
-        <a href="?taskStatus={{ selStatus }}&skillOffered=All" {% if selSkill == "All" or selSkill == "" %}class="active"{% endif %}>All</a> /
-        {% set skillsOffered = craft.tags.group("skills").relatedTo(allentries) %}
-        {% set equipmentOffered = craft.tags.group("equipment").relatedTo(allentries) %}
-        <h4>Skills:</h4>
-        {% for option in skillsOffered %}
-            <a href="?taskStatus={{ selStatus }}&skillOffered={{ option.title }}" {% if option.title == selSkill %}class="active"{% endif %}>{{ option.title }}</a>
-            {% if not loop.last %} / {% endif %}
-        {% endfor %}
-        <h4>Equipment:</h4>
-        {% for option in equipmentOffered %}
-            <a href="?taskStatus={{ selStatus }}&skillOffered={{ option.title }}" {% if option.title == selSkill %}class="active"{% endif %}>{{ option.title }}</a>
-            {% if not loop.last %} / {% endif %}
-        {% endfor %}
-    </p>
-    </div>
-
-
-
-    <ul class="volunteer_tasks">
-    	{% for entry in data %}
         <li class="volunteer_task cf">
             <div class="task_details">
 
@@ -158,9 +96,3 @@
             </div>
 
         </li>
-        {% endfor %}
-    </ul>
-</section>
-
-
-{% endblock %}

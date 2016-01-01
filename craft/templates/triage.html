@@ -1,0 +1,105 @@
+{% set sectionTitle = "Triage" %}
+
+{% extends "_layout" %}
+{% import '_snippets/_macros' as siteMacros %}
+
+{% block content %}
+{% set selActionStatus = siteMacros.getFieldValue("taskStatus", selStatus) %}
+{% set recAction = "chooseAnAction" %}
+{% set data = craft.entries.section('tasks').recommendedAction(recAction).order("urgent desc").find() %}
+
+
+<section class="section_tasks">
+
+    <div class="area_selector">
+        Assign next steps for these tasks:
+    </div>
+
+
+    <ul class="volunteer_tasks">
+    	{% for entry in data if entry.taskStatus != 'closed' %}
+
+        <li class="volunteer_task cf">
+            <div class="task_details">
+
+                <h2 class="taskname {% if entry.urgent %} urgent {% endif %}"><a href="/admin/entries/offers/{{ entry.id }}-{{ entry.slug }}">#{{ entry.id }} - {{ entry.firstName }} {{ entry.lastName }} {% if entry.urgent %}<strong>(URGENT)</strong>{% endif %}</a></h2>
+
+                <div class="info_extra">
+                    <h3>Contact:</h3>
+                    <p>
+                        {% if entry.contactNumber | length > 0 %}
+                            <span class="contactnumber">{{ entry.contactNumber }}</span>
+                        {% endif %}
+                        {% if entry.contactNumber | length > 0 and entry.emailAddress | length > 0 %}
+                         /
+                        {% endif %}
+                        {% if entry.emailAddress | length > 0 %}
+                            {{ entry.emailAddress }}
+                        {% endif %}
+                    </p>
+                </div>
+
+                {% if entry.otherContactInfo | length > 0 %}
+                <div class="info_extra">
+                    <h3>Other contact info:</h3>
+                    <p>{{ entry.otherContactInfo }}</p>
+                </div>
+                {% endif %}
+
+                <div class="info_extra">
+	                <h3>Skills needed:</h3>
+	                <p>
+                        {% if entry.skillsNeeded | length > 0 %}
+                            {% for skill in entry.skillsNeeded %}
+                                {{ skill }},
+                            {% endfor %}
+                        {% else %}
+                        n/a
+                        {% endif %}
+                    </p>
+
+                    <h3>Equipment needed:</h3>
+                    <p>
+                        {% if entry.equipmentNeeded | length > 0 %}
+                            {% for equipment in entry.equipmentNeeded %}
+                                {{ equipment }},
+                            {% endfor %}
+                        {% else %}
+                        n/a
+                        {% endif %}
+                    </p>
+
+                    {% if entry.extraInfo | length > 0 %}
+                        <h3>Extra information</h3>
+                        <p>{{ entry.extraInfo }}</p>
+                    {% endif %}
+
+	            </div>
+
+            </div>
+
+            <div class="task_cta">
+
+                <div class="info_extra">
+                    <h3>Where:</h3>
+                    <p>
+                        {% if entry.addressLine1 | length > 0 %}{{ entry.addressLine1 }}<br />{% endif %}
+                        {% if entry.addressLine2 | length > 0 %}{{ entry.addressLine2 }}<br />{% endif %}
+                        {% if entry.area | length > 0 %}{{ siteMacros.getFieldLabel("area", entry.area) }}<br />{% endif %}
+                        {% if entry.postCode | length > 0 %}{{ entry.postCode }}{% endif %}
+                    </p>
+
+                    <h3>Status:</h3>
+                    <p>{{ siteMacros.getFieldLabel("taskStatus", entry.taskStatus) }}</p>
+
+                </div>
+
+            </div>
+
+        </li>
+        {% endfor %}
+    </ul>
+</section>
+
+
+{% endblock %}

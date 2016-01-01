@@ -1,0 +1,85 @@
+        <li class="volunteer_task cf">
+            <div class="task_details">
+
+                <h2 class="taskname {% if entry.urgent %} urgent {% endif %}"><a href="/admin/entries/offers/{{ entry.id }}-{{ entry.slug }}">#{{ entry.id }} - {{ entry.firstName }} {{ entry.lastName }} {% if entry.urgent %}<strong>(URGENT)</strong>{% endif %}</a></h2>
+
+                <div class="info_extra">
+                    <h3>Contact:</h3>
+                    <p>
+                        {% if entry.contactNumber | length > 0 %}
+                            <span class="contactnumber">{{ entry.contactNumber }}</span>
+                        {% endif %}
+                        {% if entry.contactNumber | length > 0 and entry.emailAddress | length > 0 %}
+                         /
+                        {% endif %}
+                        {% if entry.emailAddress | length > 0 %}
+                            {{ entry.emailAddress }}
+                        {% endif %}
+                    </p>
+                </div>
+
+                {% if entry.otherContactInfo | length > 0 %}
+                <div class="info_extra">
+                    <h3>Other contact info:</h3>
+                    <p>{{ entry.otherContactInfo }}</p>
+                </div>
+                {% endif %}
+
+                <div class="info_extra">
+	                <h3>Skills needed:</h3>
+	                <p>
+                        {% if entry.skillsNeeded | length > 0 %}
+                            {% for skill in entry.skillsNeeded %}
+                                <a class="highlight" href="/offered-help?skillOffered={{ skill }}">{{ skill }}</a>
+                            {% endfor %}
+                        {% else %}
+                        n/a
+                        {% endif %}
+                    </p>
+
+                    <h3>Equipment needed:</h3>
+                    <p>
+                        {% if entry.equipmentNeeded | length > 0 %}
+                            {% for equipment in entry.equipmentNeeded %}
+                                <span class="highlight">{{ equipment }}</span>
+                            {% endfor %}
+                        {% else %}
+                        n/a
+                        {% endif %}
+                    </p>
+
+                    {% if entry.extraInfo | length > 0 %}
+                        <h3>Extra information</h3>
+                        <p>{{ entry.extraInfo }}</p>
+                    {% endif %}
+
+                    <h3>Action taken:</h3>
+                    {% if entry.actionTaken | length > 0 %}
+                        <p>{{ entry.actionTaken }}</p>
+                    {% endif %}
+
+
+	            </div>
+
+            </div>
+
+            <div class="task_cta">
+
+                <div class="info_extra">
+                    <h3>Where:</h3>
+                    <p>Area: {% if entry.area | length > 0 %}{{ siteMacros.getFieldLabel("area", entry.area) }}{% endif %}
+                    </p>
+                    <p>
+                        {% if entry.addressLine1 | length > 0 %}{{ entry.addressLine1 }}<br />{% endif %}
+                        {% if entry.addressLine2 | length > 0 %}{{ entry.addressLine2 }}<br />{% endif %}
+                        {% if entry.postCode | length > 0 %}{{ entry.postCode }}{% endif %}
+                    </p>
+
+                    <h3>Status:</h3>
+                    <p><span class="taskstatus {{ entry.taskStatus }}">{{ siteMacros.getFieldLabel("taskStatus", entry.taskStatus) }}</span></p>
+
+                </div>
+
+            </div>
+
+        </li>

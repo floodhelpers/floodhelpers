@@ -1,0 +1,77 @@
+{% set sectionTitle = "Needed" %}
+
+{% extends "_layout" %}
+{% import '_snippets/_macros' as siteMacros %}
+{% set selSkill = craft.request.getParam('skillNeeded') %}
+{% set selStatus = craft.request.getParam('taskStatus') %}
+{% if selSkill == "" %}
+    {% set selSkill = "All" %}
+{% endif %}
+
+{% if selStatus == "" %}
+    {% set selStatus = "All" %}
+{% endif %}
+
+{% block content %}
+
+{% set selActionStatus = siteMacros.getFieldValue("taskStatus", selStatus) %}
+{% set skillTagModel = craft.tags.search(selSkill).first() %}
+{% set allentries = craft.entries.section('tasks').limit(null) %}
+
+{% if selSkill == "All" and selActionStatus == "All" %}
+    {% set data = craft.entries.section('tasks').order("urgent desc").find() %}
+{% elseif selSkill == "All" and selActionStatus != "All" %}
+    {% set data = craft.entries.section('tasks').taskStatus(selActionStatus).order("urgent desc").find() %}
+{% elseif selSkill != "All" and selActionStatus == "All" %}
+    {% set data = craft.entries.section('tasks').relatedTo(selSkill).order("urgent desc").find() %}
+{% else %}
+    {% set data = craft.entries.section('tasks').taskStatus(selActionStatus).relatedTo(skillTagModel).order("urgent desc").find() %}
+{% endif %}
+
+<section class="section_tasks">
+
+    <div class="area_selector">
+        Currently showing <strong>{{ selStatus }}</strong> help tickets that need <strong>{{ selSkill }}</strong>.
+    </div>
+
+    <div class="area_selector">
+    <p>
+        <a href="?taskStatus=All&skillNeeded={{ selSkill }}" {% if selStatus == "All" or selStatus == "" %}class="active"{% endif %}>All</a> /
+        {% set taskStatus = craft.fields.getFieldByHandle("taskStatus") %}
+        {% for option in taskStatus.settings.options %}
+            <a href="?taskStatus={{ option.label }}&skillNeeded={{ selSkill }}" {% if option.label == selStatus %}class="active"{% endif %}>{{ option.label }}</a>
+            {% if not loop.last %} / {% endif %}
+        {% endfor %}
+    </p>
+    <p>
+        <a href="?taskStatus={{ selStatus }}&skillNeeded=All" {% if selSkill == "All" or selSkill == "" %}class="active"{% endif %}>All</a> /
+        {% set skillsNeeded = craft.tags.group("skills").relatedTo(allentries) %}
+        {% set equipmentNeeded = craft.tags.group("equipment").relatedTo(allentries) %}
+
+
+
+
+        {% for option in skillsNeeded %}
+            <a href="?taskStatus={{ selStatus }}&skillNeeded={{ option.title }}" {% if option.title == selSkill %}class="active"{% endif %}>{{ option.title }}</a>
+            {% if not loop.last %} / {% endif %}
+        {% endfor %}
+            <br>
+            <h4>Equipment:</h4>
+        {% for option in equipmentNeeded %}
+            <a href="?taskStatus={{ selStatus }}&skillNeeded={{ option.title }}" {% if option.title == selSkill %}class="active"{% endif %}>{{ option.title }}</a>
+            {% if not loop.last %} / {% endif %}
+        {% endfor %}
+    </p>
+    </div>
+
+
+
+    <ul class="volunteer_tasks">
+    	{% for entry in data %}
+        {% include 'item_need.html' %}
+        {% endfor %}
+    </ul>
+</section>
+
+
+{% endblock %}

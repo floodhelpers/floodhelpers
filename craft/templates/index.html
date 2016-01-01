@@ -1,9 +1,11 @@
+{% set sectionTitle = "Tasks needed" %}
+
 {% extends "_layout" %}
 {% import '_snippets/_macros' as siteMacros %}
 {% set selAction = craft.request.getParam('taskAction') %}
 {% set selStatus = craft.request.getParam('taskStatus') %}
 {% if selAction == "" %}
-    {% set selAction = "All" %}    
+    {% set selAction = "All" %}
 {% endif %}
 
 {% if selStatus == "" %}
@@ -20,7 +22,7 @@
 
     <div class="area_selector">
     <p>
-        <a href="?taskStatus=All&taskAction={{ selAction }}" {% if selStatus == "All" or selStatus == "" %}class="active"{% endif %}>All</a> / 
+        <a href="?taskStatus=All&taskAction={{ selAction }}" {% if selStatus == "All" or selStatus == "" %}class="active"{% endif %}>All</a> /
         {% set taskStatus = craft.fields.getFieldByHandle("taskStatus") %}
         {% for option in taskStatus.settings.options %}
             <a href="?taskStatus={{ option.label }}&taskAction={{ selAction }}" {% if option.label == selStatus %}class="active"{% endif %}>{{ option.label }}</a>
@@ -28,7 +30,7 @@
         {% endfor %}
     </p>
     <p>
-        <a href="?taskStatus={{ selStatus }}&taskAction=All" {% if selAction == "All" or selAction == "" %}class="active"{% endif %}>All</a> / 
+        <a href="?taskStatus={{ selStatus }}&taskAction=All" {% if selAction == "All" or selAction == "" %}class="active"{% endif %}>All</a> /
         {% set recommendedAction = craft.fields.getFieldByHandle("recommendedAction") %}
         {% for option in recommendedAction.settings.options %}
             {% if option.label != "Choose an Action:" %}
@@ -54,93 +56,7 @@
 
     <ul class="volunteer_tasks">
     	{% for entry in data %}
-        <li class="volunteer_task cf">
-            <div class="task_details">
-
-                <h2 class="taskname"><a href="/admin/entries/tasks/{{ entry.id }}-{{ entry.slug }}">#{{ entry.id }} - {{ entry.firstName }} {{ entry.lastName }} {% if entry.urgent %}<strong>(URGENT)</strong>{% endif %}</a></h2>
-                
-                <div class="info_extra">
-                    <h3>Contact:</h3>
-                    <p>
-                        {% if entry.contactNumber | length > 0 %}
-                            {{ entry.contactNumber }}
-                        {% endif %}
-                        {% if entry.contactNumber | length > 0 and entry.emailAddress | length > 0 %}
-                         / 
-                        {% endif %}
-                        {% if entry.emailAddress | length > 0 %}
-                            {{ entry.emailAddress }}
-                        {% endif %}
-                    </p>
-                </div>
-
-                {% if entry.otherContactInfo | length > 0 %}
-                <div class="info_extra">
-                    <h3>Other contact info:</h3>
-                    <p>{{ entry.otherContactInfo }}</p>
-                </div>
-                {% endif %}
-
-                <div class="info_extra">
-	                <h3>Skills needed:</h3>
-	                <p>
-                        {% if entry.skillsNeeded | length > 0 %}
-                            {% for skill in entry.skillsNeeded %}
-                                {{ skill }},
-                            {% endfor %}
-                        {% else %}
-                        n/a
-                        {% endif %}
-                    </p>
-
-                    <h3>Equipment needed:</h3>
-                    <p>
-                        {% if entry.equipmentNeeded | length > 0 %}
-                            {% for equipment in entry.equipmentNeeded %}
-                                {{ equipment }},
-                            {% endfor %}
-                        {% else %}
-                        n/a
-                        {% endif %}
-                    </p>
-
-                    {% if entry.extraInfo | length > 0 %}
-                        <h3>Extra information</h3>
-                        <p>{{ entry.extraInfo }}</p>
-                    {% endif %}
-
-	            </div>
-
-				
-
-            </div>
-
-            <div class="task_cta">
-
-                <div class="info_extra">
-                    <h3>Where:</h3>
-                    <p>
-                        {% if entry.addressLine1 | length > 0 %}{{ entry.addressLine1 }}<br />{% endif %}
-                        {% if entry.addressLine2 | length > 0 %}{{ entry.addressLine2 }}<br />{% endif %}
-                        {% if entry.area | length > 0 %}{{ siteMacros.getFieldLabel("area", entry.area) }}<br />{% endif %}
-                        {% if entry.postCode | length > 0 %}{{ entry.postCode }}{% endif %}
-                    </p>
-
-                    <h3>Status:</h3>
-                    <p>{{ siteMacros.getFieldLabel("taskStatus", entry.taskStatus) }}</p>
-
-                    <h3>Recommended action:</h3>
-                    <p>{{ siteMacros.getFieldLabel("recommendedAction", entry.recommendedAction) }}</p>
-
-                    {% if entry.numberOfPeopleRequired | length > 0 and entry.numberOfPeopleRequired > 0 %}
-                        <h3>Number of people required</h3>
-                        <p>{{ entry.numberOfPeopleRequired }}</p>
-                    {% endif %}
-
-                </div>
-
-            </div>
-        </li>
+        {% include 'item_need.html' %}
         {% endfor %}
     </ul>
 </section>
